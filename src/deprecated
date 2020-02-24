@@ -1,0 +1,1079 @@
+/*
+
+This is a file of deprecated or discarded functions that might come in handy later
+
+*/
+
+// void OpenCelluloid::serialFrames(){
+    
+//   serial->write('0' + 0);
+//   delay(1000);
+// };
+
+// //_________________________________________________
+
+// //_________________________________________________
+
+// void OpenCelluloid::triggerSensorNew(){
+//     if(analogRead(sensor) == sensorHigh + ((sensorHigh - sensorLow) / 2 - 15) || analogRead(sensor) == sensorHigh - ((sensorHigh - sensorLow) / 2 - 15)){
+//     boolGate = true;
+//   }
+//   else{
+//     boolGate = false;
+//     trigger = true;
+//   }
+//   if(boolGate && trigger) {
+//     Serial.write('0' + 0);
+//     trigger = false;
+//   }
+// };
+// //_________________________________________________
+
+//___________________________________________
+// void OpenCelluloid::setSerial(Stream *streamObject){
+//   _streamRef = streamObject;
+// };
+// //_________________________________________________
+// void OpenCelluloid::serialPrintln(char *somePrintln){
+//   _streamRef->println(somePrintln);
+// };
+// //_________________________________________________
+// void OpenCelluloid::serialWrite(char *someWrite){
+//   _streamRef->write(someWrite);
+// };
+// //_________________________________________________
+// int OpenCelluloid::serialRead(void){
+//   _streamRef->read();
+// };
+// //_________________________________________________
+
+// //_________________________________________________
+
+// void OpenCelluloid::encoder(){
+
+//      aState = digitalRead(channelA); // Reads the "current" state of the outputA
+//    // If the previous and the current state of the outputA are different, that means a Pulse has occured
+//    if (aState != aLastState){     
+//      // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
+//      if (digitalRead(channelB) != aState) { 
+//        rotary.counterOld ++;
+//      } else {
+//        rotary.counterOld --;
+//      }
+//      Serial.print("Position: ");
+//      Serial.println(rotary.counterOld);
+//    } 
+//    aLastState = aState; // Updates the previous state of the outputA with the current state
+//  };
+// //_________________________________________________
+
+
+// //_________________________________________________
+
+// void OpenCelluloid::setSpeed(){
+//   int potiRead = analogRead(potSpeed);
+//   motorSpeed = map(potiRead, 0, 1023, 0, 500);
+// }
+
+// //_________________________________________________
+
+// void serialTask(Sensor sensorArg, Rotary rotaryArg, OpenCelluloid openCelluloidArg, Motor motorArg) {
+//   switch (openCelluloidArg.state) {
+//     case auto_reset:
+//       Serial.println("Serial Task, case auto reset");
+//       openCelluloidArg.state = auto_end;
+//       Serial.println("Hola?");
+//       break;
+
+//     case start_moving_forward:
+
+//       motorArg.isMoving = true;
+//       digitalWrite(dir_Pin, LOW);
+//       openCelluloidArg.startCapture = true;
+//       openCelluloidArg.state = keep_moving;
+//       Serial.println("Serial Task");
+
+//       break;
+
+//     case start_moving_backward:
+//       if ( !motorArg.isMoving) {
+//         motorArg.isMoving = true;
+//       } else {
+//         openCelluloidArg.state = keep_moving;
+//         motorArg.isMoving = true;
+//       }
+//       digitalWrite(dir_Pin, HIGH);
+//       openCelluloidArg.startCapture = true;
+      
+//       break;
+
+//     case keep_moving:
+//       openCelluloidArg.home_position = false;
+//       Serial.println("Keep Moving");
+//       motorArg.moveMotor();
+//       openCelluloidArg.state = keep_moving;
+//       break;
+
+//     case keep_moving_slow:
+//       openCelluloidArg.home_position = false;
+//       //moveMotorSlow();
+//       openCelluloidArg.state = keep_moving_slow;
+//       break;
+
+//     case stoping:
+//       digitalWrite(step_Pin, LOW);
+//       digitalWrite(enabPin, HIGH);
+//       openCelluloidArg.state = auto_end;
+//       motorArg.isMoving = false;
+//       digitalWrite(enabPin, LOW);
+//       openCelluloidArg.startCapture = false;
+//       break;
+
+//     case auto_end:
+//     Serial.println("Serial Task, case auto end");
+//       openCelluloidArg.home_position = false;
+//       break;
+
+//     case one_frame:
+//       //oneFrame();
+//       motorArg.oneFrameSlow();
+//       openCelluloidArg.state = auto_end;
+//       break;
+      
+//     case loading:
+//       if ( !motorArg.isMoving) {
+//         motorArg.isMoving = true;
+//       } else {
+//         openCelluloidArg.state = keep_moving_slow;
+//         motorArg.isMoving = true;
+//       }
+//       digitalWrite(dir_Pin, LOW);
+//       break;
+    
+    
+//     case test:
+//       sensorArg.readSensor();
+//       break;
+    
+//     case test_digital:
+//       testDigital(encoButton);
+//       break;
+    
+//     case test_analog:
+//       testAnalog(encoButton);
+//       break; 
+
+//     case encoder_test:
+//       rotaryArg.encoderTest();
+//       break;    
+    
+//     case calibrate_shutter:
+//       openCelluloidArg.calibrateShutter(rotaryArg);
+//       break;
+
+//     case calibrate_sensor:
+//       sensorArg.calibrateSensor(openCelluloidArg, rotaryArg);
+//       break;
+    
+//     case read_sensor:
+//       sensorArg.readSensor();
+//       break;
+    
+//     case print_values:
+//       sensorArg.printSensorValues();
+//       break;
+    
+//     case test_acceleration:
+//       motorArg.accelerate();
+//       break;
+//    }
+// };
+
+// void OpenCelluloid::setTimer(TimerOne *timerObject){
+//   _timerRef = timerObject;
+
+// };
+// //_________________________________________________
+
+// void stateSwitch(State openCelluloidArg) {
+//     if (Serial.available()) {
+//         uint8_t code = Serial.read();
+//         switch (code) {
+//         case 'a':
+//             openCelluloidArg.state = auto_reset;
+//             break;
+//         case 'b':
+//             openCelluloidArg.state = start_moving_forward;
+//             Serial.println("Start moving forward");
+//             break;
+//         case 'c':
+//             openCelluloidArg.state = start_moving_backward;
+//             Serial.println("Start moving backward");           
+//             break;
+//         case 'd':
+//             openCelluloidArg.state = stoping;
+//             Serial.println("Stopping");
+//             break;
+//         case 'e':
+//             openCelluloidArg.state = one_frame;
+//             Serial.print("I received: ");
+//             Serial.println(code);
+//             break;
+//         case 'f':
+//             openCelluloidArg.state = hundred_frames;
+//             break;
+//         case 'g':
+//             openCelluloidArg.state = loading;
+//             break;
+//         case 'h':
+//             openCelluloidArg.state = test;
+//             break;
+//         case 'i':
+//             openCelluloidArg.state = test_digital;
+//             break;
+//         case 'j':
+//             openCelluloidArg.state = test_analog;
+//             break;
+//         case 'k':
+//             openCelluloidArg.state = encoder_test;
+//             break;
+//         case 'l':
+//             openCelluloidArg.state = calibrate_shutter;
+//             break;
+//         case 'm':
+//             openCelluloidArg.state = calibrate_sensor;
+//             break;
+//         case 'n':
+//             openCelluloidArg.state = read_sensor;
+//             break;
+//         case 'o':
+//             openCelluloidArg.state = print_values;
+//             break;
+//         case 'p':
+//             openCelluloidArg.state = test_acceleration;
+//             break;
+
+
+//         case '0':
+//             openCelluloidArg.state = stoping;
+//             break;
+//         case '1':
+//             openCelluloidArg.state = start_moving_forward;
+//             break;
+//         case '2':
+//             openCelluloidArg.state = start_moving_backward;
+//             break;
+//         case '4':
+//             openCelluloidArg.state = auto_reset;
+//             break;
+        
+//         }
+//         //Serial.flush();
+//         }
+//         // else{
+//         //     Serial.println("Serial not available");
+//         // }
+//     };
+
+//___________________________________________
+//***********HEADERS****************//
+
+// void printValues();
+
+// void adjustShutter();
+
+// void setSerial(Stream *streamObject);
+// void setTimer(TimerOne  *timerObject);
+// //void setMotor(Stepper *motorObject, int stepPin, int dirPin);
+// //void setController(StepControl *controllerObject);
+// void serialPrintln(char *somePrintln);
+// void serialWrite(char *someWrite);
+// int serialRead(void);
+// int serialAvailable(void);
+// void triggerSensorNew();
+// void blinkLed();
+// void setSpeed();
+// void oneHundredFrames();
+ //void serialFrames();
+ // void triggerSensor();
+
+ // #define auto_reset              20
+// #define start_moving_forward    21
+// #define start_moving_backward   22
+// #define keep_moving             23
+// #define stoping                 24
+// #define auto_end                25
+// #define one_frame               26
+// #define hundred_frames          27
+// #define loading                 28
+// #define keep_moving_slow        29
+// #define test                    30
+// #define test_digital            31
+// #define test_analog             32
+// #define encoder_test            33
+// #define calibrate_shutter       34
+// #define calibrate_sensor        35
+// #define read_sensor             36
+// #define print_values            37
+// #define test_acceleration       38
+
+//**************main.cpp**************
+
+// //Serial.begin(115200);
+// //using namespace TMC2660_n;
+//   TimerOne  timer1;
+//   int frameCounter = 0;
+
+//   //Stepper motor(stepPin, dirPin);
+//   //StepControl controller;
+//   constexpr int spr = 16000;
+  
+  
+// //   static void moveMotorPwmGlobal(){
+// //     Timer1.pwm(9, 512, 350);
+// //     analogWrite(stepPin, 128);
+// //     motor.setTargetRel(100000000000);
+// //     controller.move(motor);
+// // }
+//   const int  testValue = 666;
+//   int incomingByte = 0; // for incoming serial data
+//   //OpenCelluloid upuaut;
+
+// // static void adjustShutterEncoder(){
+
+// //   for (int i = 0; i < 60 ; i ++) {
+// //     digitalWrite(stepPin, HIGH);
+// //     delayMicroseconds(200);
+// //     digitalWrite(stepPin, LOW);
+// //     delayMicroseconds(200);
+// //   }
+// // };
+// // static void moveMotorEncoder(){
+
+// //   aState = digitalRead(channelA);
+// //   if (aState != aLastState){     
+// //     if (digitalRead(channelB) != aState) { 
+// //        counterNew = counterOld + 1;
+// //      } else {
+// //        counterNew = counterOld - 1;
+// //      }
+// //    }
+// //    if (counterNew > counterOld ){
+// //      digitalWrite(dirPin, HIGH);
+// //      adjustShutterEncoder();
+// //    } 
+// //    if (counterNew < counterOld){
+// //      digitalWrite(dirPin, LOW);
+// //      adjustShutterEncoder();
+// //    }
+// //    aLastState = aState;
+// //    counterOld = counterNew;
+// // };
+
+// static void triggerSensorNew(){
+//     if(analogRead(sensor) == upuaut.sensorHigh + ((upuaut.sensorLow - upuaut.sensorHigh) / 2 - 75) || analogRead(sensor) == upuaut.sensorHigh - ((upuaut.sensorLow - upuaut.sensorHigh) / 2 - 75)){
+//     upuaut.boolGate = true;
+//   }
+//   else if(analogRead(sensor) == upuaut.sensorLow + ((upuaut.sensorLow - upuaut.sensorHigh) / 2 - 75) || analogRead(sensor) == upuaut.sensorLow - ((upuaut.sensorLow - upuaut.sensorHigh) / 2 - 75)){
+//     upuaut.boolGate = false;
+//     upuaut.trigger = true;
+//   }
+//   if(upuaut.boolGate && upuaut.trigger) {
+//     Serial.write('0' + 0);
+//     frameCounter ++;
+//     Serial.println("");
+//     Serial.println("Frame   ");
+//     Serial.println(frameCounter);
+//     upuaut.trigger = false;
+//   }
+// };
+
+// Trigger old
+};
+
+
+void switchState(volatile Request &requestArg,
+                 volatile Request &prevRequest,
+                 Stepper &stepperArg,
+                 StepControl &stepControlArg,
+                 RotateControl &rotateControlArg,
+                 Sensor &sensorArg,
+                 Rotary &rotaryArg,
+                 OpenCelluloid &openCelluloidArg,
+                 Motor &motorArg,
+                 Bounce &bounceArg,
+                 std::array<int, 6> &ledsArg,
+                 Encoder &encoderArg,
+                 Bounce &bounceEncoButtonArg){
+
+  static State stateArg = State::idle;
+  //stateArg = State::idle;
+
+  switch (requestArg){
+    case Request::auto_reset_request:
+      
+      Serial.println("Serial Task, case auto reset");
+      Serial.println("a = Auto Reset");
+      Serial.println("b = Start Moving Forward");
+      Serial.println("c = Start Moving Backward");
+      Serial.println("d = Stop");
+      Serial.println("e = One Frame");
+      Serial.println("f = Hundred Frames");
+      Serial.println("g = Loading");
+      Serial.println("h = Test");
+      Serial.println("i = Test digital");
+      Serial.println("j = Test analog");
+      Serial.println("k = Encoder Test");
+      Serial.println("l = Calibrate Shutter");
+      Serial.println("m = Calibrate Sensor");
+      Serial.println("n = Read Sensor");
+      Serial.println("o = Print Values");
+      Serial.println("q = Direction Toggle");
+      Serial.println("r = Turn on interrupt");
+      Serial.println("s = Turn off interrupt");
+      Serial.println("t = Toggle Capture");
+      Serial.println("u = Homing");
+      Serial.println("v = Test button");
+      Serial.println("x = Test LED");
+
+
+      Serial.println("0 = Stopping");
+      Serial.println("1 = Start Moving Forward");
+      Serial.println("2 = Start Moving backward");
+      Serial.println("4 = Auto Reset");
+      break;
+    
+    case Request::start_moving_forward_request:
+    Serial.println("Start moving forward");
+      if(stateArg == State::is_moving && digitalReadFast(dir_Pin) == HIGH){
+        rotateControlArg.stopAsync();
+        delay(600);
+        stateArg = State::idle;   
+      }
+      else if(stateArg == State::is_moving){
+        stateArg = State::is_moving;
+      }
+      if (stateArg == State::idle){
+      digitalWriteFast(dir_Pin, LOW);
+      rotateControlArg.rotateAsync(stepperArg); // start rotation
+      stateArg = State::is_moving;
+      }
+      break;
+
+    case Request::start_moving_backward_request:
+      Serial.println("Start moving backward");
+      if(stateArg == State::is_moving && digitalReadFast(dir_Pin) == LOW){
+        rotateControlArg.stopAsync();
+        delay(600);
+        stateArg = State::idle;
+      }
+      else if(stateArg == State::is_moving){
+        stateArg = State::is_moving;
+      }
+      if (stateArg == State::idle){
+      digitalWriteFast(dir_Pin, HIGH);
+      rotateControlArg.rotateAsync(stepperArg); // start rotation
+      stateArg = State::is_moving;
+      }
+      break;
+    
+    case Request::stopping_request:
+      Serial.println("Stopping");
+      if (stateArg == State::is_moving){
+        Serial.println("stopRequest");
+        //stepControlArg.stop();             //stop will wait until motor stops which is not good in a state machine...
+        rotateControlArg.stopAsync();        //...use the async version instead to immediately return;
+        stateArg = State::idle;
+        }
+      break;
+    
+    case Request::one_frame_request:
+      Serial.println("One frame request");
+      motorArg.xFrames(5, openCelluloidArg, bounceArg);
+      stateArg = State::idle;
+      break;
+    
+    case Request::loading_request:
+      if (stateArg == State::idle){
+        rotateControlArg.rotateAsync(stepperArg); // start rotation
+        stateArg = State::is_moving;
+        }
+        break;
+    
+    case Request::test_request:
+      sensorArg.readSensor();
+      break;
+    
+    case Request::test_digital_request:
+      testDigital(dirSwitch);
+      break;
+    
+    case Request::test_analog_request:
+      testAnalog(dirSwitch);
+      break; 
+
+    case Request::encoder_test_request:
+      rotaryArg.encoderTest();
+      break;    
+    
+    case Request::calibrate_shutter_request:
+      openCelluloidArg.calibrateShutter(rotaryArg);
+      break;
+
+    case Request::calibrate_sensor_request:
+      sensorArg.calibrateSensor(openCelluloidArg, rotaryArg);
+      break;
+    
+    case Request::read_sensor_request:
+        stateArg = State::read_sensor;
+        while (Serial.available()){
+          sensorArg.readSensor();
+        };
+      break;
+    
+    case Request::print_values_request:
+      sensorArg.printSensorValues();
+      break;
+    
+    case Request::test_acceleration_request:
+      motorArg.accelerate();
+      break;
+
+    case Request::turn_on_interrupt_request:
+      openCelluloidArg.isCapturing = true;
+      Serial.println("Interrupt turned on");
+      stateArg = State::idle;
+      break;
+    case Request::turn_off_interrupt_request:
+      sensorInterruptOff();
+      Serial.println("Interrupt turned off");
+      stateArg = State::idle;
+      break;
+    
+    case Request::homing_request:
+      openCelluloidArg.homing();
+      Serial.println("Homing");
+      stateArg = State::idle;
+      break;
+    
+    case Request::test_leds_request:
+      digitalWrite(ledsArg[3], !digitalReadFast(ledsArg[3]));
+      stateArg = State::idle;
+      break;
+    //Toggle requests
+    //______________________________________
+
+
+  case Request::direction_toggle_request:
+    Serial.printf("Direction Toggle request processed \n");
+    if (stateArg == State::is_moving){
+      rotateControlArg.stopAsync();
+      delay(800);
+      stateArg = State::idle;     
+      Serial.printf("Direction: %d \n", digitalRead(dir_Pin));
+      digitalWrite(dir_Pin, !digitalRead(dir_Pin));
+      rotateControlArg.rotateAsync(stepperArg); // start rotation
+      stateArg = State::is_moving;      
+      }
+    if (stateArg == State::idle){
+      digitalWrite(dir_Pin, !digitalRead(dir_Pin));
+      Serial.printf("Direction: %d \n", digitalRead(dir_Pin));
+    }
+      break;
+
+    case Request::capture_toggle_request:
+      openCelluloidArg.isCapturing = !openCelluloidArg.isCapturing;
+      digitalWrite(led5, !digitalRead(led5));
+      
+      Serial.write(1);
+      if (openCelluloidArg.isCapturing){
+          //interrupts()
+          attachInterrupt(digitalPinToInterrupt(sensor), traditionalTriggerInterrupt, CHANGE);
+          NVIC_SET_PRIORITY(IRQ_PORTC, 8);
+      }else{
+        detachInterrupt(sensor);
+        //noInterrupts();
+      }
+      stateArg = State::idle;
+      break;
+    
+    case Request::start_stop_toggle_request:
+      Serial.printf("Start stop request processed \n");
+        if (stateArg == State::idle){
+          Serial.println("Request processed");
+          rotateControlArg.rotateAsync(stepperArg); // start rotation
+          stateArg = State::is_moving;
+          }
+        else if(stateArg == State::is_moving){
+          Serial.println("Request processed");
+          rotateControlArg.stopAsync();
+          delay(600);
+          stateArg = State::idle;   
+        }
+        break;
+    
+    case Request::change_speed_toggle_request:
+      Serial.printf("Change speed \n");
+      if (stateArg == State::is_moving){
+        rotateControlArg.stopAsync();
+        delay(400);
+        stateArg = State::change_speed;
+      }if (stateArg == State::idle){
+        stateArg = State::change_speed;
+      }if (stateArg == State::change_speed){
+        changeSpeed(stateArg, prevRequest, encoderArg, openCelluloidArg, motorArg, bounceEncoButtonArg, ledsArg, stepperArg);
+        stateArg = State::idle;
+      }
+      
+      
+      break;
+     
+    case Request::idle_request:
+      Serial.printf("Idle request processed \n");
+      delay(500);
+      // Serial.println("Idle Request");
+      break;
+
+  }
+};
+
+Request checkInputStream(Stream &stream, volatile Request &prevRequestArg){
+
+  switch (stream.read()){
+
+        case 'a':
+            Serial.println("Auto reset");
+            return Request::auto_reset_request;
+            prevRequestArg = Request::auto_reset_request;
+            break;
+        case 'b':
+            // Serial.println("Start moving forward");
+            return Request::start_moving_forward_request;
+            prevRequestArg = Request::start_moving_forward_request;
+            break;
+        case 'c':
+            // Serial.println("Start moving backward");
+            return Request::start_moving_backward_request;
+            prevRequestArg = Request::start_moving_backward_request;          
+            break;
+        case 'd':
+            // Serial.println("Stopping");
+            return Request::stopping_request;  
+            prevRequestArg = Request::stopping_request;
+            break;
+        case 'e':
+            Serial.println("One frame");
+            return Request::one_frame_request;
+            prevRequestArg = Request::one_frame_request;
+            break;
+        case 'f':
+            Serial.println("Hundred Frames");
+            return Request::hundred_frames_request;
+            prevRequestArg = Request::hundred_frames_request;
+            break;
+        case 'g':
+            Serial.println("Loading");
+            return Request::loading_request;
+            prevRequestArg = Request::loading_request;
+            break;
+        case 'h':
+            Serial.println("Test");
+            return Request::test_request;
+            prevRequestArg = Request::test_request;
+            break;
+        case 'i':
+            Serial.println("Test digital");
+            return Request::test_digital_request;
+            prevRequestArg = Request::test_digital_request;
+            break;
+        case 'j':
+            Serial.println("Test analog");
+            return Request::test_analog_request;
+            prevRequestArg = Request::test_analog_request;
+            break;
+        case 'k':
+            Serial.println("Encoder test");
+            return Request::encoder_test_request;
+            prevRequestArg = Request::encoder_test_request;
+            break;
+        case 'l':
+            Serial.println("Calibrate shutter");
+            return Request::calibrate_shutter_request;
+            prevRequestArg = Request::calibrate_shutter_request;
+            break;
+        case 'm':
+            Serial.println("Calibrate sensor");
+            return Request::calibrate_sensor_request;
+            prevRequestArg = Request::calibrate_sensor_request;
+            break;
+        case 'n':
+            Serial.println("Read sensor");
+            return Request::read_sensor_request;
+            prevRequestArg = Request::read_sensor_request;
+            break;
+        case 'o':
+            Serial.println("Print values");
+            return Request::print_values_request;
+            prevRequestArg = Request::print_values_request;
+            break;
+        case 'p':
+            Serial.println("Test acceleration");
+            return Request::test_acceleration_request;
+            prevRequestArg = Request::test_acceleration_request;
+            break;
+        case 'q':
+            Serial.println("Direction Toggle");
+            return Request::direction_toggle_request;
+            prevRequestArg = Request::direction_toggle_request;
+            break;
+        
+        case 'r':
+            Serial.println("Turn on interrupt");
+            return Request::turn_on_interrupt_request;
+            prevRequestArg = Request::turn_on_interrupt_request;
+            break;
+
+        case 's':
+            Serial.println("Turn off interrupt");
+            return Request::turn_off_interrupt_request;
+            prevRequestArg = Request::turn_off_interrupt_request;
+            break;
+
+        case 't':
+            Serial.println("Toggle Capture");
+            return Request::capture_toggle_request;
+            prevRequestArg = Request::capture_toggle_request;
+            break;
+          
+        case 'u':
+            return Request::homing_request;
+            prevRequestArg = Request::homing_request;
+            break;
+        
+        case 'x':
+            Serial.println("LEDS test");
+            return Request::test_leds_request;
+            prevRequestArg = Request::test_leds_request;
+            break;
+        
+        // case 'v':
+        //     return Request::button
+        
+        case '0':
+            return Request::stopping_request;
+            break;
+        case '1':
+            return Request::start_moving_forward_request;
+            break;
+        case '2':
+            return Request::start_moving_backward_request;
+            break;
+        case '4':
+            return Request::auto_reset_request;
+            break;
+        
+        }
+};
+
+
+Request checkInputButtons(std::array<Bounce, 6> &bouncerArrayArg, volatile Request &prevRequestArg){
+
+  Request returnRequest;
+  returnRequest = prevRequestArg;
+
+  bouncerArrayArg[3].update();
+  if(bouncerArrayArg[3].fell()){
+    Serial.printf("Start stop toggle \n");
+    returnRequest = Request::start_stop_toggle_request;
+    }
+  bouncerArrayArg[1].update();
+  if(bouncerArrayArg[1].fell()){
+    Serial.printf("Direction toggle \n");
+    returnRequest = Request::direction_toggle_request;
+  }
+  bouncerArrayArg[2].update();
+  if(bouncerArrayArg[2].fell()){
+    Serial.printf("Capture toggle \n");
+    returnRequest = Request::capture_toggle_request;
+  }
+  bouncerArrayArg[4].update();
+  if(bouncerArrayArg[4].fell()){
+    Serial.printf("Speed select toggle \n");
+    returnRequest = Request::speed_toggle_request;
+  }
+  bouncerArrayArg[5].update();
+  if(bouncerArrayArg[5].fell()){
+    Serial.printf("Speed change request \n");
+    returnRequest = Request::change_speed_toggle_request;
+  }
+  // if(returnRequest != prevRequestArg){
+  //   prevRequestArg = returnRequest;
+    return returnRequest;
+  //}
+};
+void serialTask(State &stateArg, Sensor &sensorArg, Rotary &rotaryArg, OpenCelluloid &openCelluloidArg, Motor &motorArg, Bounce &bounceArg, Stepper &stepperArg, StepControl &stepControlArg, RotateControl &rotateControlArg) {
+  switch (stateArg) {
+    case State::auto_reset:
+      Serial.println("Serial Task, case auto reset");
+    Serial.println("a = Auto Reset");
+    Serial.println("b = Start Moving Forward");
+    Serial.println("c = Start Moving Backward");
+    Serial.println("d = Stop");
+    Serial.println("e = One Frame");
+    Serial.println("f = Hundred Frames");
+    Serial.println("g = Loading");
+    Serial.println("h = Test");
+    Serial.println("i = Test digital");
+    Serial.println("j = Test analog");
+    Serial.println("k = Encoder Test");
+    Serial.println("l = Calibrate Shutter");
+    Serial.println("m = Calibrate Sensor");
+    Serial.println("n = Read Sensor");
+    Serial.println("o = Print Values");
+    Serial.println("q = Direction Toggle");
+    Serial.println("r = Turn on interrupt");
+    Serial.println("s = Turn off interrupt");
+    Serial.println("t = Capture");
+
+    Serial.println("0 = Stopping");
+    Serial.println("1 = Start Moving Forward");
+    Serial.println("2 = Start Moving backward");
+    Serial.println("4 = Auto Reset");
+      stateArg = State::idle;
+      break;
+
+    case State::start_moving_forward:
+      motorArg.isMoving = true;
+      openCelluloidArg.home_position = false;
+      digitalWrite(dir_Pin, LOW);
+      //stepperArg.setTargetRel(LONG_MAX);
+      rotateControlArg.rotateAsync(stepperArg);
+      stateArg = State::is_moving;
+      break;
+
+    case State::start_moving_backward:
+      motorArg.isMoving = true;
+      openCelluloidArg.home_position = false;
+      digitalWrite(dir_Pin, HIGH);
+      //stepperArg.setTargetRel(LONG_MAX);
+      //motorArg.accelerate();
+      rotateControlArg.rotateAsync(stepperArg);
+      stateArg = State::is_moving;
+      break;
+
+    case State::is_moving:
+      
+      //Serial.println("Keep Moving");
+      //motorArg.moveMotor();
+      //rotateControlArg.rotateAsync(stepperArg);
+      //stepControlArg.moveAsync(stepperArg);
+      stateArg = State::is_moving;
+
+      break;
+
+    case State::keep_moving_slow:
+      openCelluloidArg.home_position = false;
+      //moveMotorSlow();
+      stateArg = State::keep_moving_slow;
+      break;
+
+    case State::stopping:
+      
+      //stepControlArg.stop();
+      //digitalWrite(step_Pin, LOW);
+      //digitalWrite(enabPin, HIGH);    
+      motorArg.isMoving = false;
+      //stepControlArg.stop();
+      rotateControlArg.stop();
+      //digitalWrite(enab_Pin, LOW);
+      stateArg = State::idle;
+      break;
+
+    case State::auto_end:
+
+      openCelluloidArg.home_position = false;
+      break;
+
+    case State::one_frame:
+      motorArg.xFrames(5, openCelluloidArg, bounceArg);
+      stateArg = State::idle;
+      break;
+      
+    case State::loading:
+      if ( !motorArg.isMoving) {
+        motorArg.isMoving = true;
+      } else {
+        stateArg = State::keep_moving_slow;
+        motorArg.isMoving = true;
+      }
+      digitalWrite(dir_Pin, LOW);
+      break;
+
+    case State::toggle_capture:
+      openCelluloidArg.isCapturing = !openCelluloidArg.isCapturing;
+      if (openCelluloidArg.isCapturing){
+          Serial.println("Capture on");
+      }else{
+        Serial.println("Capture off");
+      }
+      stateArg = State::idle;
+      break;
+    
+    case State::test:
+      sensorArg.readSensor();
+      break;
+    
+    case State::test_digital:
+      testDigital(dirSwitch);
+      break;
+    
+    case State::test_analog:
+      testAnalog(dirSwitch);
+      break; 
+
+    case State::encoder_test:
+      rotaryArg.encoderTest();
+      break;    
+    
+    case State::calibrate_shutter:
+      openCelluloidArg.calibrateShutter(rotaryArg);
+      break;
+
+    case State::calibrate_sensor:
+      sensorArg.calibrateSensor(openCelluloidArg, rotaryArg);
+      break;
+    
+    case State::read_sensor:
+      sensorArg.readSensor();
+      break;
+    
+    case State::print_values:
+      sensorArg.printSensorValues();
+      break;
+    
+    case State::test_acceleration:
+      motorArg.accelerate();
+      break;
+    case State::direction_toggle:
+      digitalWrite(dir_Pin, !(digitalRead(dir_Pin)));
+      stateArg = State::auto_reset;
+      break;
+    case State::turn_on_interrupt:
+      sensorInterruptOn(bounceArg);
+      Serial.println("Interrupt turned on");
+      stateArg = State::auto_reset;
+      break;
+    case State::turn_off_interrupt:
+      sensorInterruptOff();
+      Serial.println("Interrupt turned off");
+      stateArg = State::auto_reset;
+      break;
+   }
+};
+
+void stateSwitch(State &stateArg) {
+    if (Serial.available()) {
+        uint8_t code = Serial.read();
+        switch (code) {
+        case 'a':
+            Serial.println("Auto reset");
+            stateArg = State::auto_reset;
+            break;
+        case 'b':
+            Serial.println("Start moving forward");
+            stateArg = State::start_moving_forward;
+            break;
+        case 'c':
+            Serial.println("Start moving backward");
+            stateArg = State::start_moving_backward;            
+            break;
+        case 'd':
+            Serial.println("Stopping");
+            stateArg = State::stopping;  
+            break;
+        case 'e':
+            Serial.println("One frame");
+            stateArg = State::one_frame;
+            Serial.println(code);
+            break;
+        case 'f':
+            Serial.println("Hundred Frames");
+            stateArg= State::hundred_frames;
+            break;
+        case 'g':
+            Serial.println("Loading");
+            stateArg= State::loading;
+            break;
+        case 'h':
+            Serial.println("Test");
+            stateArg = State::test;
+            break;
+        case 'i':
+            Serial.println("Test digital");
+            stateArg = State::test_digital;
+            break;
+        case 'j':
+            Serial.println("Test analog");
+            stateArg = State::test_analog;
+            break;
+        case 'k':
+            Serial.println("Encoder test");
+            stateArg = State::encoder_test;
+            break;
+        case 'l':
+            Serial.println("Calibrate shutter");
+            stateArg = State::calibrate_shutter;
+            break;
+        case 'm':
+            Serial.println("Calibrate sensor");
+            stateArg = State::calibrate_sensor;
+            break;
+        case 'n':
+            Serial.println("Read sensor");
+            stateArg = State::read_sensor;
+            break;
+        case 'o':
+            Serial.println("Print values");
+            stateArg = State::print_values;
+            break;
+        case 'p':
+            Serial.println("Test acceleration");
+            stateArg = State::test_acceleration;
+            break;
+        case 'q':
+            Serial.println("Direction Toggle");
+            stateArg = State::direction_toggle;
+            break;
+        
+        case 'r':
+            Serial.println("Turn on interrupt");
+            stateArg = State::turn_on_interrupt;
+            break;
+
+        case 's':
+            Serial.println("Turn off interrupt");
+            stateArg = State::turn_off_interrupt;
+            break;
+
+        case 't':
+            Serial.println("Toggle Capture");
+            stateArg = State::toggle_capture;
+            break;
+        
+        case '0':
+            stateArg = State::stopping;
+            break;
+        case '1':
+            stateArg = State::start_moving_forward;
+            break;
+        case '2':
+            stateArg = State::start_moving_backward;
+            break;
+        case '4':
+            stateArg = State::auto_reset;
+            break;
+        
+        }
+    }
+
+};

@@ -1,0 +1,5 @@
+include <example.h>
+
+Example exampleObj();
+Example exampleObj2();
+Example exampleObj(3);

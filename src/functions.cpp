@@ -166,7 +166,7 @@ void switchStateOF(volatile Request &requestArg,
       break;
     
     case Request::test_leds_request:
-      digitalWrite(ledsArg[5], !digitalReadFast(ledsArg[5]));
+      digitalWrite(ledsArg[6], !digitalReadFast(ledsArg[6]));
       stateArg = State::idle;
       break;
     //Toggle requests
@@ -196,22 +196,22 @@ void switchStateOF(volatile Request &requestArg,
         openCelluloidArg.isCapturing = !openCelluloidArg.isCapturing;     
         if(openCelluloidArg.isCapturing){
           digitalWrite(ledsArg[4], HIGH);
-          triggerTimerArg.begin(traditionalTriggerCheck, 2000);
-          triggerTimerArg.priority(0);
+          // triggerTimerArg.begin(traditionalTriggerCheck, 200);
+          // triggerTimerArg.priority(0);
           attachInterrupt(digitalPinToInterrupt(sensor), traditionalTriggerInterrupt, CHANGE);
           NVIC_SET_PRIORITY(IRQ_PORTC, 0);
-          delay(500);  
+          //delay(500);  
         //Serial.write(1); ffmpeg??
         }
         else{
           digitalWrite(ledsArg[4], LOW);        
           detachInterrupt(sensor);
-          triggerTimerArg.end();
+          //triggerTimerArg.end();
           //noInterrupts();
         }
         //stateArg = State::idle;
       }
-      else if(modeArg == Mode::experimental){
+      else if(modeArg == Mode::discrete){
         openCelluloidArg.isCapturing = !openCelluloidArg.isCapturing;     
         if(openCelluloidArg.isCapturing){
           digitalWrite(ledsArg[4], HIGH); 
@@ -221,7 +221,7 @@ void switchStateOF(volatile Request &requestArg,
           }
         else{
           digitalWrite(ledsArg[4], LOW);
-          triggerTimerArg.end();
+          //triggerTimerArg.end();
           supportBool = true;
         }
   }
@@ -263,14 +263,63 @@ void switchStateOF(volatile Request &requestArg,
         noInterrupts();
         }
       }
-      
+    
+
       break;
+
+    case Request::set_speed_1_request:
+      if (stateArg == State::is_moving){
+        rotateControlArg.stopAsync();
+        delay(400);
+        }
+        motorArg.speedIndex = 3;
+        initMode(modeArg, motorArg, stepperArg, ledsArg);
+        
+        break;
+    case Request::set_speed_2_request:
+      if (stateArg == State::is_moving){
+        rotateControlArg.stopAsync();
+        delay(400);
+        }
+        motorArg.speedIndex = 2;
+        initMode(modeArg, motorArg, stepperArg, ledsArg);
+        
+        break;
+    
+    case Request::set_speed_3_request:
+      if (stateArg == State::is_moving){
+        rotateControlArg.stopAsync();
+        delay(400);
+        }
+        motorArg.speedIndex = 1;
+        initMode(modeArg, motorArg, stepperArg, ledsArg);
+        
+        break;
+    case Request::set_speed_4_request:
+      if (stateArg == State::is_moving){
+        rotateControlArg.stopAsync();
+        delay(400);
+        }
+        motorArg.speedIndex = 0;
+        initMode(modeArg, motorArg, stepperArg, ledsArg);
+        
+        break;
 
     case Request::mode_toggle_request:
       if(modeArg == Mode::continuous){
+        if (stateArg == State::is_moving){
+          rotateControlArg.stopAsync();
+          delay(300);
+          stateArg = State::idle;
+        }
         modeArg = Mode::discrete;
         initMode(modeArg, motorArg, stepperArg, ledsArg);
       }else if(modeArg == Mode::discrete){
+        if (stateArg == State::is_moving){
+          rotateControlArg.stopAsync();
+          delay(300);
+          stateArg = State::idle;
+        }
         modeArg = Mode::continuous;
         initMode(modeArg, motorArg, stepperArg, ledsArg);
       }
@@ -393,8 +442,8 @@ Request checkInputStreamOF(Stream &stream, volatile Request &prevRequestArg){
         case 'o':
             //Serial.println("Print values");
             Serial.print('o');
-            return Request::print_values_request;
-            prevRequestArg = Request::print_values_request;
+            return Request::mode_toggle_request;
+            prevRequestArg = Request::mode_toggle_request;
             break;
         case 'p':
             //Serial.println("Test acceleration");
@@ -472,6 +521,19 @@ Request checkInputStreamOF(Stream &stream, volatile Request &prevRequestArg){
             break;
         case '4':
             return Request::auto_reset_request;
+            break;
+        
+        case '5':
+            return Request::set_speed_1_request;
+            break;
+        case '6':
+            return Request::set_speed_2_request;
+            break;
+        case '7':
+            return Request::set_speed_3_request;
+            break;
+        case '8':
+            return Request::set_speed_4_request;
             break;
         
         }
@@ -616,6 +678,13 @@ void sensorInterruptOff(){
 
 void traditionalTriggerInterrupt(){
   triggerCounter += 1;
+  if(triggerCounter == 4){
+      Serial.print('0');
+      //captureFlag = false; doesnt work
+      //timerTest();
+      
+      triggerCounter = 0;
+  }
 };
 
 void traditionalTriggerCheck(){
@@ -625,7 +694,7 @@ void traditionalTriggerCheck(){
     //   timerCounterOld = timerCounterNew;
     // }
     if(triggerCounter == 4){
-      //Serial.print('0');
+      Serial.print('0');
       timerTest();  
       triggerCounter = 0;
     }
@@ -718,7 +787,7 @@ static void changeSpeed(State &stateArg,
       bounceEncoButtonArg.update();
       if (bounceEncoButtonArg.fell() || bounceEncoButtonArg.rose()){
         stepperArg.setMaxSpeed(motorArg.maxSpeed / motorArg.speeds1[motorArg.speedIndex]);
-        Serial.printf("Speed changed \n");
+        //Serial.printf("Speed changed \n");
         stateArg = State::idle;
         }
     }
@@ -738,7 +807,7 @@ void initMode(Mode &modeArg, Motor &motorArg, Stepper &stepperArg, std::array<in
 
   switch (modeArg){
     case Mode::continuous:
-      motorArg.maxSpeed = 2000;
+      motorArg.maxSpeed = 15000;
 
       if(motorArg.speedIndex == 3){  
           digitalWrite(ledsArg[0], HIGH);
@@ -765,13 +834,55 @@ void initMode(Mode &modeArg, Motor &motorArg, Stepper &stepperArg, std::array<in
         digitalWrite(ledsArg[3], HIGH);
       }
 
-      digitalWrite(ledsArg[4], HIGH);
+      digitalWrite(ledsArg[5], HIGH);
+      digitalWrite(ledsArg[6], LOW);
       motorArg.selectedSpeed = motorArg.maxSpeed / motorArg.speeds1[0];
 
       stepperArg.setMaxSpeed(motorArg.maxSpeed / motorArg.speeds1[motorArg.speedIndex]);
       stepperArg.setAcceleration(motorArg.maxAcceleration); 
       
       Serial.print('h');
+
+      break;
+
+    case Mode::discrete:
+      motorArg.maxSpeed = 2500;
+
+      if(motorArg.speedIndex == 3){  
+          digitalWrite(ledsArg[0], HIGH);
+          digitalWrite(ledsArg[1], LOW);
+          digitalWrite(ledsArg[2], LOW);
+          digitalWrite(ledsArg[3], LOW);
+        }
+      else if(motorArg.speedIndex == 2){
+        digitalWrite(ledsArg[0], HIGH);
+        digitalWrite(ledsArg[1], HIGH);
+        digitalWrite(ledsArg[2], LOW);
+        digitalWrite(ledsArg[3], LOW);
+      }
+      else if(motorArg.speedIndex == 1){
+        digitalWrite(ledsArg[0], HIGH);
+        digitalWrite(ledsArg[1], HIGH);
+        digitalWrite(ledsArg[2], HIGH);
+        digitalWrite(ledsArg[3], LOW);
+      }
+      else if(motorArg.speedIndex == 0){
+        digitalWrite(ledsArg[0], HIGH);
+        digitalWrite(ledsArg[1], HIGH);
+        digitalWrite(ledsArg[2], HIGH);
+        digitalWrite(ledsArg[3], HIGH);
+      }
+
+      digitalWrite(ledsArg[5], LOW);
+      digitalWrite(ledsArg[6], HIGH);
+      //motorArg.selectedSpeed = motorArg.maxSpeed / motorArg.speeds1[0];
+
+      stepperArg.setMaxSpeed(motorArg.maxSpeed / motorArg.speeds1[motorArg.speedIndex]);
+      stepperArg.setAcceleration(motorArg.maxAcceleration); 
+      
+      Serial.print('i');
+
+      break;
 
   }
 

@@ -32,8 +32,11 @@ enum class Request {
     start_stop_toggle_request,
     mode_toggle_request,
     change_speed_toggle_request,
-    idle_request
-
+    idle_request,
+    set_speed_1_request,
+    set_speed_2_request,
+    set_speed_3_request,
+    set_speed_4_request
     //Test requests
     //_____________________________
 

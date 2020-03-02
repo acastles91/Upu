@@ -82,6 +82,10 @@ void setup() {
   supportBool = true;
   
   modeObj =  Mode::continuous;
+  initMode(modeObj, motorObj, stepperObj, leds);
+  openCelluloidObj.isCapturing = false;
+  //digitalWrite(leds[4], LOW);
+
 
 
   //attempt at traditional interrupt and timer
@@ -96,6 +100,7 @@ void setup() {
   
   Serial.begin(115200);
   delay(2000);
+  rotateControlObj.stopAsync();
 
 };
 
@@ -143,10 +148,10 @@ void loop() {
                 triggerTimerObj,
                 modeObj);
      }
-  if (captureFlag == true){
-    Serial.print('0');
-    captureFlag = false;
-  }
+  // if (captureFlag == true){
+  //   Serial.print('0');
+  //   captureFlag = false;
+  // }
 
 
   

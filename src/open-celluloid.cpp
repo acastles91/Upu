@@ -72,7 +72,7 @@ void OpenCelluloid::homing(){
       }
     }
   }
-  digitalWrite(dir_Pin, HIGH);
+  digitalWrite(dir_Pin, LOW);
   gateOpen = true;
   //moveMotorSlow();
 };

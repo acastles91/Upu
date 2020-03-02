@@ -196,17 +196,17 @@ void switchStateOF(volatile Request &requestArg,
         openCelluloidArg.isCapturing = !openCelluloidArg.isCapturing;     
         if(openCelluloidArg.isCapturing){
           digitalWrite(ledsArg[4], HIGH);
-          // triggerTimerArg.begin(traditionalTriggerCheck, 200);
-          // triggerTimerArg.priority(0);
+          triggerTimerArg.begin(traditionalTriggerCheck, 200);
+          triggerTimerArg.priority(4);
           attachInterrupt(digitalPinToInterrupt(sensor), traditionalTriggerInterrupt, CHANGE);
-          NVIC_SET_PRIORITY(IRQ_PORTC, 0);
+          NVIC_SET_PRIORITY(IRQ_PORTC, 4);
           //delay(500);  
         //Serial.write(1); ffmpeg??
         }
         else{
           digitalWrite(ledsArg[4], LOW);        
           detachInterrupt(sensor);
-          //triggerTimerArg.end();
+          triggerTimerArg.end();
           //noInterrupts();
         }
         //stateArg = State::idle;
@@ -678,12 +678,12 @@ void sensorInterruptOff(){
 
 void traditionalTriggerInterrupt(){
   triggerCounter += 1;
-  if(triggerCounter == 4){
-      Serial.print('0');
-      //captureFlag = false; doesnt work
-      //timerTest();
+  // if(triggerCounter == 4){
+  //     Serial.print('0');
+  //     //captureFlag = false; doesnt work
+  //     //timerTest();
       
-      triggerCounter = 0;
+  //     triggerCounter = 0;
   }
 };
 
@@ -695,7 +695,7 @@ void traditionalTriggerCheck(){
     // }
     if(triggerCounter == 4){
       Serial.print('0');
-      timerTest();  
+      //timerTest();  
       triggerCounter = 0;
     }
   };

@@ -197,9 +197,9 @@ void switchStateOF(volatile Request &requestArg,
         if(openCelluloidArg.isCapturing){
           digitalWrite(ledsArg[4], HIGH);
           triggerTimerArg.begin(traditionalTriggerCheck, 200);
-          triggerTimerArg.priority(4);
+          triggerTimerArg.priority(0);
           attachInterrupt(digitalPinToInterrupt(sensor), traditionalTriggerInterrupt, CHANGE);
-          NVIC_SET_PRIORITY(IRQ_PORTC, 4);
+          NVIC_SET_PRIORITY(IRQ_PORTC, 0);
           //delay(500);  
         //Serial.write(1); ffmpeg??
         }
@@ -684,7 +684,7 @@ void traditionalTriggerInterrupt(){
   //     //timerTest();
       
   //     triggerCounter = 0;
-  }
+  // }
 };
 
 void traditionalTriggerCheck(){
@@ -846,7 +846,8 @@ void initMode(Mode &modeArg, Motor &motorArg, Stepper &stepperArg, std::array<in
       break;
 
     case Mode::discrete:
-      motorArg.maxSpeed = 2500;
+      //motorArg.maxSpeed = 2500; stable
+      motorArg.maxSpeed = 3500;
 
       if(motorArg.speedIndex == 3){  
           digitalWrite(ledsArg[0], HIGH);

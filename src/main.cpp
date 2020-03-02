@@ -152,7 +152,16 @@ void loop() {
   //   Serial.print('0');
   //   captureFlag = false;
   // }
-
+if (modeObj == Mode::discrete){
+  bounceSensor.update();
+  if (bounceSensor.changed()){
+    triggerCounter +=1;
+  }
+  if (triggerCounter == 4){
+    Serial.print('0');
+    triggerCounter = 0;
+  }
+};
 
   
 
